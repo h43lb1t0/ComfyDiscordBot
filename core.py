@@ -73,18 +73,31 @@ class ComfyApi():
 
         return output_images
     
+    def parse_dimensions(self, dimensions: str):
+        print(dimensions)
+        try:
+            width, height = map(int, dimensions.split('x'))
+            return width, height
+        except ValueError:
+            raise ValueError(f"Invalid format for dimensions: {dimensions}")
+        
     
-    def generate_images(self, prompt_text):
+    
+    async def generate_images(self, prompt_text, dimensions: str):
 
         with open("worflow.json", "r") as file:
             json_content = file.read()
 
         prompt = json.loads(json_content)
 
+        try:
+            width, height = self.parse_dimensions(dimensions)
+        except Exception as e:
+            print(e)
 
         # image dimensions
-        prompt["5"]["inputs"]["width"] = 1024
-        prompt["5"]["inputs"]["height"] = 1024
+        prompt["5"]["inputs"]["width"] = width
+        prompt["5"]["inputs"]["height"] = height
 
         # prompt
         prompt["75"]["inputs"]["text_g"] = prompt_text # base
@@ -92,7 +105,7 @@ class ComfyApi():
         prompt["120"]["inputs"]["text"] = prompt["75"]["inputs"]["text_g"]
 
         # seed
-        prompt["22"]["inputs"]["noise_seed"] =  42 #random.randint(0, sys.maxsize)
+        prompt["22"]["inputs"]["noise_seed"] = random.randint(0, sys.maxsize)
 
 
 

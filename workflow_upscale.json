@@ -1,0 +1,38 @@
+{
+    "1": {
+      "inputs": {
+        "image": "HTW_Berlin_Logo_farbig.jpg",
+        "choose file to upload": "image"
+      },
+      "class_type": "LoadImage"
+    },
+    "3": {
+      "inputs": {
+        "model_name": "4x-UltraSharp.pth"
+      },
+      "class_type": "UpscaleModelLoader"
+    },
+    "4": {
+      "inputs": {
+        "upscale_model": [
+          "3",
+          0
+        ],
+        "image": [
+          "1",
+          0
+        ]
+      },
+      "class_type": "ImageUpscaleWithModel"
+    },
+    "5": {
+      "inputs": {
+        "filename_prefix": "upscaled",
+        "images": [
+          "4",
+          0
+        ]
+      },
+      "class_type": "SaveImage"
+    }
+  }

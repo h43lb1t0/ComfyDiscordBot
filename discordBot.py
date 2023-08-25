@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 import git
@@ -43,7 +44,18 @@ api = ComfyApi()
     
 bot = interactions.Client(token=discord_bot_token)
 
-logger.log_info("I'm ready!")       
+logger.log_info("I'm ready!")      
+
+demensions = [
+    interactions.SlashCommandChoice(name="1024x1024", value="1024x1024"),
+    interactions.SlashCommandChoice(name="960x1024", value="960x1024"),
+    interactions.SlashCommandChoice(name="1024x960", value="1024x960"),
+    interactions.SlashCommandChoice(name="768x1024", value="768x1024")
+    
+    ] 
+
+
+
 
 @interactions.slash_command(
     name="create",
@@ -55,7 +67,6 @@ logger.log_info("I'm ready!")
     required=True,
     opt_type=interactions.OptionType.STRING
 )
-
 @interactions.slash_option(
     name="style",
     description="select a style for your images",
@@ -64,20 +75,30 @@ logger.log_info("I'm ready!")
     choices=choices_sai
     
 )
+@interactions.slash_option(
+    name="dimensions",
+    description="demensions for the image",
+    required=False,
+    opt_type=interactions.OptionType.STRING,
+    choices=demensions
+    
+)
 
-async def my_first_command(ctx: interactions.SlashContext, prompt : str, style : str):
+async def my_first_command(ctx: interactions.SlashContext, prompt : str, style : str, dimensions : str = "1024x1024"):
     text_g, neg_prompt = read_sdxl_templates_replace_and_combine(read_json_file(os.path.join(destination_dir, "sdxl_styles_sai.json")), style, prompt, "")
-    await ctx.send(text_g)
+    msg = await ctx.send(text_g)
+    thread = await msg.create_thread(f"Pictures {ctx.author}")
     files = []
     try:
-        images = api.generate_images(text_g)
-    except:
-        await ctx.send("I'm sorry, but i had trouble connecting to the ComfyUi API")
+        images = await api.generate_images(text_g, dimensions)
+        #images = api.generate_images(text_g, dimensions)
+    except Exception as e:
+        await ctx.send(f"I'm sorry, but i had trouble connecting to the ComfyUi API\n{e}")
         return
     for node_id in images:
         for image_data in images[node_id]:
             import io
             files.append(interactions.File(file=io.BytesIO(image_data), content_type="image", file_name="img.png"))
-    await ctx.send(file=files)
-
+    #await ctx.send()
+    await thread.send(file=files)
 bot.start()
