@@ -85,7 +85,7 @@ class ComfyApi():
     
     async def generate_images(self, prompt_text, dimensions: str):
 
-        with open("worflow.json", "r") as file:
+        with open("workflow.json", "r") as file:
             json_content = file.read()
 
         prompt = json.loads(json_content)
