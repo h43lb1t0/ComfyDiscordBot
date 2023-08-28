@@ -83,7 +83,7 @@ class ComfyApi():
         
     
     
-    async def generate_images(self, prompt_text, dimensions: str):
+    async def generate_images(self, prompt_text,supporting_prompt, dimensions: str, batch_size):
 
         with open("workflow.json", "r") as file:
             json_content = file.read()
@@ -101,11 +101,14 @@ class ComfyApi():
 
         # prompt
         prompt["75"]["inputs"]["text_g"] = prompt_text # base
-        prompt["75"]["inputs"]["text_l"] = ""# details
+        prompt["75"]["inputs"]["text_l"] = supporting_prompt
         prompt["120"]["inputs"]["text"] = prompt["75"]["inputs"]["text_g"]
 
         # seed
         prompt["22"]["inputs"]["noise_seed"] = random.randint(0, sys.maxsize)
+
+        # batch size
+        prompt["5"]["inputs"]["batch_size"] = batch_size
 
 
 

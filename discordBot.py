@@ -68,12 +68,17 @@ demensions = [
     opt_type=interactions.OptionType.STRING
 )
 @interactions.slash_option(
+    name="supporting_prompt",
+    description="prompt to support the postive prompt",
+    required=False,
+    opt_type=interactions.OptionType.STRING
+)
+@interactions.slash_option(
     name="style",
     description="select a style for your images",
     required=True,
     opt_type=interactions.OptionType.STRING,
-    choices=choices_sai
-    
+    choices=choices_sai  
 )
 @interactions.slash_option(
     name="dimensions",
@@ -81,17 +86,24 @@ demensions = [
     required=False,
     opt_type=interactions.OptionType.STRING,
     choices=demensions
-    
+)
+@interactions.slash_option(
+    name="batch_size",
+    description="amount of images to generate",
+    required=False,
+    opt_type=interactions.OptionType.INTEGER,
+    min_value=1,
+    max_value=4,
+    choices=[1, 2, 3, 4]
 )
 
-async def my_first_command(ctx: interactions.SlashContext, prompt : str, style : str, dimensions : str = "1024x1024"):
+async def my_first_command(ctx: interactions.SlashContext, prompt : str, supporting_prompt: str, style : str, dimensions : str = "1024x1024", batch_size : int = 4):
     text_g, neg_prompt = read_sdxl_templates_replace_and_combine(read_json_file(os.path.join(destination_dir, "sdxl_styles_sai.json")), style, prompt, "")
     msg = await ctx.send(text_g)
     thread = await msg.create_thread(f"Pictures {ctx.author}")
     files = []
     try:
-        images = await api.generate_images(text_g, dimensions)
-        #images = api.generate_images(text_g, dimensions)
+        images = api.generate_images(text_g, supporting_prompt, dimensions, batch_size)
     except Exception as e:
         await ctx.send(f"I'm sorry, but i had trouble connecting to the ComfyUi API\n{e}")
         return
