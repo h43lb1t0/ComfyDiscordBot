@@ -1,7 +1,6 @@
 import asyncio
 import os
 import sys
-import git
 from git import Repo
 from pprint import pprint
 import interactions
@@ -48,10 +47,11 @@ logger.log_info("I'm ready!")
 
 demensions = [
     interactions.SlashCommandChoice(name="1024x1024", value="1024x1024"),
+    interactions.SlashCommandChoice(name="896x1152", value="768x1024"),
+    interactions.SlashCommandChoice(name="1152x896", value="768x1024"),
     interactions.SlashCommandChoice(name="960x1024", value="960x1024"),
     interactions.SlashCommandChoice(name="1024x960", value="1024x960"),
-    interactions.SlashCommandChoice(name="768x1024", value="768x1024")
-    
+    interactions.SlashCommandChoice(name="768x1024", value="768x1024")    
     ] 
 
 
@@ -59,7 +59,7 @@ demensions = [
 
 @interactions.slash_command(
     name="create",
-    description="This is the first command I made!",
+    description="create images with SDXL",
 )
 @interactions.slash_option(
     name="prompt",
