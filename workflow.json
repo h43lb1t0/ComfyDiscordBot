@@ -35,13 +35,13 @@
   "22": {
     "inputs": {
       "add_noise": "enable",
-      "noise_seed": 71,
+      "noise_seed": 74,
       "steps": 20,
       "cfg": 7.5,
       "sampler_name": "ddim",
       "scheduler": "ddim_uniform",
       "start_at_step": 0,
-      "end_at_step": 24,
+      "end_at_step": 13,
       "return_with_leftover_noise": "enable",
       "model": [
         "146",
@@ -65,13 +65,13 @@
   "23": {
     "inputs": {
       "add_noise": "disable",
-      "noise_seed": 71,
+      "noise_seed": 74,
       "steps": 20,
       "cfg": 7.5,
       "sampler_name": "ddim",
       "scheduler": "ddim_uniform",
-      "start_at_step": 24,
-      "end_at_step": 30,
+      "start_at_step": 13,
+      "end_at_step": 20,
       "return_with_leftover_noise": "disable",
       "model": [
         "4",
