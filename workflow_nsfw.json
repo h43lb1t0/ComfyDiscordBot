@@ -7,9 +7,9 @@
   },
   "5": {
     "inputs": {
-      "width": 1024,
-      "height": 1024,
-      "batch_size": 1
+      "width": 896,
+      "height": 1152,
+      "batch_size": 4
     },
     "class_type": "EmptyLatentImage"
   },
@@ -20,8 +20,8 @@
         0
       ],
       "vae": [
-        "4",
-        2
+        "149",
+        0
       ]
     },
     "class_type": "VAEDecode"
@@ -35,16 +35,16 @@
   "22": {
     "inputs": {
       "add_noise": "enable",
-      "noise_seed": 74,
-      "steps": 20,
+      "noise_seed": 85,
+      "steps": 30,
       "cfg": 7.5,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
       "start_at_step": 0,
-      "end_at_step": 13,
+      "end_at_step": 24,
       "return_with_leftover_noise": "enable",
       "model": [
-        "146",
+        "148",
         0
       ],
       "positive": [
@@ -65,13 +65,13 @@
   "23": {
     "inputs": {
       "add_noise": "disable",
-      "noise_seed": 74,
-      "steps": 20,
+      "noise_seed": 85,
+      "steps": 30,
       "cfg": 7.5,
-      "sampler_name": "ddim",
-      "scheduler": "ddim_uniform",
-      "start_at_step": 13,
-      "end_at_step": 20,
+      "sampler_name": "dpmpp_2m",
+      "scheduler": "karras",
+      "start_at_step": 24,
+      "end_at_step": 30,
       "return_with_leftover_noise": "disable",
       "model": [
         "4",
@@ -100,10 +100,10 @@
       "crop_h": 0,
       "target_width": 4096,
       "target_height": 4096,
-      "text_g": "A cinematic photograph of a corgi sitting in a field of flowers with mountains off in the background at sunset with a cloudy sky",
-      "text_l": "cinematic, fujifilm, national geographic, nature, snowy mountains, flowers, colorful, overcast sky, sunset",
+      "text_g": "",
+      "text_l": "((nude)), ((nsfw))",
       "clip": [
-        "146",
+        "148",
         1
       ]
     },
@@ -114,7 +114,7 @@
       "ascore": 1,
       "width": 4096,
       "height": 4096,
-      "text": "Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
+      "text": "SFW, clothings, ((big tits, big boobs, large boobs, large tits, natural boobs, natural tits)), Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
       "clip": [
         "4",
         1
@@ -130,10 +130,10 @@
       "crop_h": 0,
       "target_width": 4096,
       "target_height": 4096,
-      "text_g": "Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
-      "text_l": "Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
+      "text_g": "SFW, clothings, ((big tits, big boobs, large boobs, large tits, natural boobs, natural tits)), Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
+      "text_l": "SFW, clothings, ((big tits, big boobs, large boobs, large tits, natural boobs, natural tits)), Deformed, unrealistic, bad quality, grainy, noisy, plastic, hazy, low contrast",
       "clip": [
-        "146",
+        "148",
         1
       ]
     },
@@ -144,7 +144,7 @@
       "ascore": 6,
       "width": 4096,
       "height": 4096,
-      "text": "A cinematic photograph of a corgi sitting in a field of flowers with mountains off in the background at sunset with a cloudy sky",
+      "text": "",
       "clip": [
         "4",
         1
@@ -177,5 +177,27 @@
       ]
     },
     "class_type": "LoraLoader"
+  },
+  "148": {
+    "inputs": {
+      "lora_name": "Loaras/nudify_xl.safetensors",
+      "strength_model": 0.5,
+      "strength_clip": 1,
+      "model": [
+        "146",
+        0
+      ],
+      "clip": [
+        "146",
+        1
+      ]
+    },
+    "class_type": "LoraLoader"
+  },
+  "149": {
+    "inputs": {
+      "vae_name": "VAE/sdxl_vae.safetensors"
+    },
+    "class_type": "VAELoader"
   }
 }
