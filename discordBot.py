@@ -78,7 +78,11 @@ async def worker():
         if not task_queue.empty():
             text_g, supporting_prompt, dimensions, batch_size, nsfw, thread_name, thread, autor_mention = await task_queue.get()
 
-            images = await api.generate_images(text_g, supporting_prompt, dimensions, batch_size, nsfw)
+            try:
+                images = await api.generate_images(text_g, supporting_prompt, dimensions, batch_size, nsfw)
+            except Exception as e:
+                await thread.send(f"{autor_mention} sorry I can't reach the Comfy API. Try again or (re)start Comfy\nError: {e}")
+                continue
 
             files = []
             if images:
