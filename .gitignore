@@ -1,4 +1,4 @@
-TOKEN
+.env
 __pycache__/
 venv/
 repositories/sdxl_prompt_styler/

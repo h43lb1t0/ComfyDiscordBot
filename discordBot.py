@@ -4,6 +4,7 @@ import sys
 from git import Repo
 import interactions
 from logger import Logger
+from dotenv import load_dotenv
 
 
 
@@ -37,10 +38,11 @@ for style in unique_style_names:
     else:
         choices_ads.append(interactions.SlashCommandChoice(name=style, value=style))
 
+load_dotenv()
+
+discord_bot_token = os.getenv("discordToken")
 
 
-with open("TOKEN") as token:
-    discord_bot_token = token.read()
 
 from core import ComfyApi
 
