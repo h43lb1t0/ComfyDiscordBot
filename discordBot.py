@@ -94,10 +94,10 @@ async def worker():
                 await thread.send(f"{autor_mention} your images are ready!")
                 print("Files sent.")
 
-                var = interactions.EmbedAttachment(files[0])
+                """ var = interactions.EmbedAttachment(files[0])
                 foo = interactions.Embed(title="Your images are ready!", description=f"{autor_mention} your images are ready!", color=0x00ff00)
 
-                await thread.send(embed=foo)
+                await thread.send(embed=foo) """
         await asyncio.sleep(1)
 
 
