@@ -300,5 +300,16 @@ async def stop_command(ctx: interactions.SlashContext):
     else:
         await ctx.send("Comfy API wasn't running.")
 
+@interactions.slash_command(name="status",
+                            description="get the status of the Comfy API")
+async def status_command(ctx: interactions.SlashContext):
+    await ctx.defer()
+    await ctx.send("Checking Comfy API status...")
+    started = await ssh.try_connect()
+    if started:
+        await ctx.send("Comfy API is running.")
+    else:
+        await ctx.send("Comfy API is not running.")
+
 bot.start()
 
