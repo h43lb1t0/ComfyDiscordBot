@@ -49,7 +49,7 @@ class ShhHelper():
 
 
     async def stop_server(self):
-        if not await self.try_connect():
+        if await self.try_connect():
             with paramiko.SSHClient() as client:
                 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
