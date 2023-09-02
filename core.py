@@ -121,7 +121,7 @@ class ComfyApi():
 
         # seed
         prompt["22"]["inputs"]["noise_seed"] = random.randint(0, sys.maxsize)
-        prompt["22"]["inputs"]["noise_seed"] = 1 # for debugging
+        #prompt["22"]["inputs"]["noise_seed"] = 1 # for debugging
 
         # batch size
         prompt["5"]["inputs"]["batch_size"] = batch_size
