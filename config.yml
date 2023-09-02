@@ -1,5 +1,6 @@
 server:
-  address: "100.94.188.27:8188"
+  address: "localhost"
+  port: 8188
 logger:
   debug: false
   log: true

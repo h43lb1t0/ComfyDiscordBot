@@ -1,3 +1,4 @@
+from pprint import pprint
 import random
 import sys
 import aiohttp
@@ -24,6 +25,8 @@ class ComfyApi():
     def __init__(self):
         self.config_file = "config.yml"
         self.server_address = self.read_yml("server", "address")
+        port = self.read_yml("server", "port")
+        self.server_address = f"{self.server_address}:{port}"
         self.client_id = str(uuid.uuid4())
         
     async def queue_prompt(self, prompt):
@@ -98,6 +101,7 @@ class ComfyApi():
         else:
             with open("workflow.json", "r") as file:
                 json_content = file.read()
+        
 
         prompt = json.loads(json_content)
 
@@ -117,11 +121,24 @@ class ComfyApi():
 
         # seed
         prompt["22"]["inputs"]["noise_seed"] = random.randint(0, sys.maxsize)
-        #prompt["22"]["inputs"]["noise_seed"] = 1 # for debugging
+        prompt["22"]["inputs"]["noise_seed"] = 1 # for debugging
 
         # batch size
         prompt["5"]["inputs"]["batch_size"] = batch_size
 
+
+        async with websockets.connect(f"ws://{self.server_address}/ws?clientId={self.client_id}") as ws:
+            files = await self.get_images(ws, prompt)
+            return files
+        
+
+    async def upscaled_images(self, filename):
+        with open("workflow_upscale.json", "r") as file:
+                json_content = file.read()
+
+        prompt = json.loads(json_content)
+
+        prompt["1"]["inputs"]["image"] += filename
 
         async with websockets.connect(f"ws://{self.server_address}/ws?clientId={self.client_id}") as ws:
             files = await self.get_images(ws, prompt)

@@ -5,6 +5,7 @@ from git import Repo
 import interactions
 from logger import Logger
 from dotenv import load_dotenv
+from ssh import ShhHelper
 
 
 
@@ -47,10 +48,10 @@ discord_bot_token = os.getenv("discordToken")
 from core import ComfyApi
 
 api = ComfyApi()
+ssh = ShhHelper(api)
     
 bot = interactions.Client(token=discord_bot_token,
-                          send_not_ready_messages=True,
-                          auto_defer=True)
+                          send_not_ready_messages=True)
 
 logger.log_info("I'm ready!")      
 
@@ -69,6 +70,20 @@ batch_sizes = [
     interactions.SlashCommandChoice(name="4", value=4) 
     ] 
 
+from interactions import ActionRow, Button
+from interactions.api.events import Component
+
+image_names = []
+
+@interactions.listen()
+async def on_component(event: Component):
+    ctx = event.ctx
+
+    match ctx.custom_id:
+        case "1":
+            await ctx.send("You clicked 1!")
+        case "2":
+            await ctx.send("You clicked 2!")
 
 
 from asyncio import Queue
@@ -76,6 +91,7 @@ from asyncio import Queue
 task_queue = Queue()
 
 async def worker():
+    
     while True:
         if not task_queue.empty():
             text_g, supporting_prompt, dimensions, batch_size, nsfw, thread_name, thread, autor_mention = await task_queue.get()
@@ -89,16 +105,40 @@ async def worker():
             files = []
             if images:
                 for node_id in images:
+                    print(images)
                     for image_data in images[node_id]:
                         import io
-                        files.append(interactions.File(file=io.BytesIO(await image_data), content_type="image", file_name="img.png"))
+                        img_data = await image_data
+                        files.append(interactions.File(file=io.BytesIO(img_data), content_type="image", file_name="img.png"))
+                        #image_names.append(img_data['filename'])
 
-                foo = await thread.send(file=files)
+                await thread.send(file=files)
+
+                print(image_names)
                 """ url = foo.attachments[0].url
                 print(url) """
 
+                """ components: list[ActionRow] = [
+                    ActionRow(
+                        Button(
+                            style=interactions.ButtonStyle.GREEN,
+                            label="Click Me",
+                            custom_id="1"
+                        ),
+                        Button(
+                            style=interactions.ButtonStyle.GREEN,
+                            label="Click Me Too",
+                            custom_id="2"
+                        )
+                    )
+                ] """
+
+                #await thread.send(f"{autor_mention} your images are ready!", components=components)
                 await thread.send(f"{autor_mention} your images are ready!")
+
+                
                 print("Files sent.")
+
 
                 """ var = interactions.EmbedAttachment(files[0])
                 foo = interactions.Embed(title="Your images are ready!", description=f"{autor_mention} your images are ready!", color=0x00ff00)
@@ -236,6 +276,29 @@ async def nsfw_command(ctx: interactions.SlashContext, prompt : str, style : str
     await create_command(ctx, prompt, style, supporting_prompt, dimensions, batch_size, nsfw=True)
 
 
+@interactions.slash_command(name="start",
+                            description="start the Comfy API")
+async def start_command(ctx: interactions.SlashContext):
+    await ctx.defer()
+    await ctx.send("Starting Comfy API...")
+    started = await ssh.start_server()
+    if started:
+        await ctx.send("Comfy API started.")
+    else:
+        await ctx.send("Comfy API failed to start.")
+
+@interactions.slash_command(name="stop",
+                            description="stop the Comfy API")
+async def stop_command(ctx: interactions.SlashContext):
+    await ctx.defer()
+    await ctx.send("Stopping Comfy API...")
+    started = await ssh.stop_server()
+    if started == "stopped":
+        await ctx.send("Comfy API stopped.")
+    elif started == "not stopped":
+        await ctx.send("Comfy API failed to start.")
+    else:
+        await ctx.send("Comfy API wasn't running.")
 
 bot.start()
 
