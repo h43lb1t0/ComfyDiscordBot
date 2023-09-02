@@ -1,4 +1,5 @@
 import os
+import time
 import paramiko
 from dotenv import load_dotenv
 from core import ComfyApi
@@ -43,7 +44,7 @@ class ShhHelper():
             client.connect(hostname=self.server_address, username=self.username, pkey=self.private_key)
 
             stdin, stdout, stderr = client.exec_command('nohup /media/haelbito/Server_1/stable_difiusion/ComfyUI/run.sh --listen > output.log 2>&1 &')
-
+            time.sleep(10)
             return await self.try_connect()
         
 
